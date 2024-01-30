@@ -7,7 +7,7 @@ Lumen package for generate crud controller,model and routes
 Run commands below:
 
 ```bash
-composer require bramf/crud-generator
+composer require vladmunj/crud-generator
 ```
 ## Environment Variables
 
