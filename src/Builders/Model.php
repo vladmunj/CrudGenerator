@@ -80,7 +80,7 @@ class Model{
      */
     public function build(){
         $this->getModelFields();
-        $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Models/Crud.php');
+        $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Models/Crud.php');
         foreach($this->buildParams as $param => $value){
             $template = str_replace($param,$value,$template);
         }
@@ -93,7 +93,7 @@ class Model{
         }
         file_put_contents(base_path().'/app/Models/Crud/'.$this->buildParams['ParamModel'].'.php',$template);
         if(!file_exists(base_path().'/app/Models/'.$this->buildParams['ParamModel'].'.php',)){
-            $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Models/Base.php');
+            $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Models/Base.php');
             foreach($this->buildParams as $param => $value){
                 $template = str_replace($param,$value,$template);
             }
@@ -198,8 +198,8 @@ class Model{
      * generate mutator for model attribute
      */
     private function getMutatorTemplate($type,$attr){
-        if(!file_exists(base_path().'/vendor/bramf/crud-generator/src/Mutators/'.$type.'.mutator')) return '';
-        $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Mutators/'.$type.'.mutator');
+        if(!file_exists(base_path().'/vendor/vladmunj/crud-generator/src/Mutators/'.$type.'.mutator')) return '';
+        $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Mutators/'.$type.'.mutator');
         $template = str_replace('ParamAttributeNameUpper',str_replace('|','',(ucwords(str_replace('_','|',$attr),'|'))),$template);
         $template = str_replace('ParamAttributeName',$attr,$template);
         return $template;
@@ -231,7 +231,7 @@ class Model{
     private function generateProperties(){
         $output = [];
         foreach($this->fields as $field){
-            $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Models/ModelProperty.template');
+            $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Models/ModelProperty.template');
             $description = Str::snake($field['name'],' ');
             if($field['foreign']){
                 $description = $field['name'].' is related to '.$field['foreign_table'].'.'.$field['foreign_table_column'];

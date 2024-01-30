@@ -26,7 +26,7 @@ class Controller{
      * @return string $template - generated open api annotations for request
      */
     private function buildOARequest($fields){
-        $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Controllers/OARequest.temp');
+        $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Controllers/OARequest.temp');
         $buildParams = [
             'ParamNameUcfirst' => ucfirst($fields['name']),
             'ParamName' => $fields['name'],
@@ -47,7 +47,7 @@ class Controller{
      * @return string $template - generated open api annotations for response
      */
     private function buildOAResponse($fields){
-        $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Controllers/OAResponse.temp');
+        $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Controllers/OAResponse.temp');
         $buildParams = [
             'ParamName' => $fields['name'],
             'ParamType' => $fields['type']
@@ -73,7 +73,7 @@ class Controller{
      * Build controller file
      */
     public function build(){
-        $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Controllers/Crud.php');
+        $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Controllers/Crud.php');
         foreach($this->buildParams as $param => $value){
             $template = str_replace($param,$value,$template);
         }
@@ -85,7 +85,7 @@ class Controller{
         }
         file_put_contents(base_path().'/app/Http/Controllers/Crud/'.$this->buildParams['ParamController'].'.php',$template);
         if(!file_exists(base_path().'/app/Http/Controllers/'.$this->buildParams['ParamController'].'.php')){
-            $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Controllers/Base.php');
+            $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Controllers/Base.php');
             foreach($this->buildParams as $param => $value){
                 $template = str_replace($param,$value,$template);
             }

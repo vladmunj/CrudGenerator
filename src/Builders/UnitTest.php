@@ -64,7 +64,7 @@ class UnitTest{
         $this->buildParams['ParamTableNameSingle'] = Str::singular($this->params['table_name']);
         $this->buildParams['ParamTableName'] = $this->params['table_name'];
         $this->buildParams['ParamResponseFields'] = '"'.implode('","',array_keys($this->modelFields)).'"';
-        $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Tests/UnitTest.php');
+        $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Tests/UnitTest.php');
         foreach($this->buildParams as $param => $value){
             $template = str_replace($param,$value,$template);
         }

@@ -24,7 +24,7 @@ class ServiceController{
             mkdir($this->controllerServiceDir);
         }
         if(!file_exists($this->controllerServiceDir.'/'.$this->buildParams['ParamController'].'Controller.php')){
-            $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Controllers/Service.php');
+            $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Controllers/Service.php');
             foreach(array_reverse($this->buildParams) as $param => $value){
                 $template = str_replace($param,$value,$template);
             }

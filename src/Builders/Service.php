@@ -22,7 +22,7 @@ class Service{
             mkdir($this->serviceDir);
         }
         if(!file_exists($this->serviceDir.'/'.$this->buildParams['ParamService'].'Service.php')){
-            $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Services/Api.php');
+            $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Services/Api.php');
             foreach(array_reverse($this->buildParams) as $param => $value){
                 $template = str_replace($param,$value,$template);
             }

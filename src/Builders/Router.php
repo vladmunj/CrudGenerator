@@ -41,7 +41,7 @@ class Router{
         $groups = DB::table('crud_route_groups')->orderBy('group_name')->get()->reverse();
         $routesData = '';
         foreach($groups as $group){
-            $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Routes/route-group.template');
+            $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Routes/route-group.template');
             $template = str_replace('ParamUrl',$group->group_name,$template);
             $template = str_replace('ParamController',$group->controller_name,$template);
             $routesData .= $template;

@@ -60,7 +60,7 @@ class ModelFactory{
 
     public function build(){
         $this->buildParams['ParamModel'] = $this->params['model_name'];
-        $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/ModelFactories/Crud.php');
+        $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/ModelFactories/Crud.php');
         foreach($this->buildParams as $param => $value){
             $template = str_replace($param,$value,$template);
         }

@@ -26,7 +26,7 @@ class ServiceRouter{
      */
     private function generateServiceRoutes(){
         $routesData = file_get_contents($this->routesPath);
-        $template = file_get_contents(base_path().'/vendor/bramf/crud-generator/src/Templates/Routes/route-service.template');
+        $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Routes/route-service.template');
         $template = str_replace('ParamControllerLower',$this->buildParams['ParamControllerLower'],$template);
         $template = str_replace('ParamController',$this->buildParams['ParamController'],$template);
         $routesData .= $template;
