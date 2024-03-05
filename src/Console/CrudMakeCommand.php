@@ -106,7 +106,5 @@ class CrudMakeCommand extends Command
         (new ModelFactory($this->params))->build();
         (new UnitTest($this->params))->build();
         $this->runTests();
-        $this->call('make:swagger');
-        $this->info('OpenApi annotations created successfully');
     }
 }

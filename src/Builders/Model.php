@@ -85,7 +85,6 @@ class Model{
             $template = str_replace($param,$value,$template);
         }
         $template = str_replace('#RULES',$this->generateRules(),$template);
-        $template = str_replace('#PROPERTIES',$this->generateProperties(),$template);
         $template = str_replace('#MUTATORS',$this->generateMutators(),$template);
         $template = str_replace('#FILLABLE',$this->fillable(array_keys($this->fields)),$template);
         if(!file_exists($this->modelCrudDir) && !is_dir($this->modelCrudDir)){
@@ -226,22 +225,5 @@ class Model{
             $result[] = '"'.$key.'"';
         }
         return '        '.join(",",$result);
-    }
-
-    private function generateProperties(){
-        $output = [];
-        foreach($this->fields as $field){
-            $template = file_get_contents(base_path().'/vendor/vladmunj/crud-generator/src/Templates/Models/ModelProperty.template');
-            $description = Str::snake($field['name'],' ');
-            if($field['foreign']){
-                $description = $field['name'].' is related to '.$field['foreign_table'].'.'.$field['foreign_table_column'];
-            }
-            $template = str_replace('ParamUdt',$field['udt'],$template);
-            $template = str_replace('ParamName',$field['name'],$template);
-            $template = str_replace('ParamDescription',$description,$template);
-            $template = str_replace('ParamType',$field['rules']['type'],$template);
-            $output[] = $template;
-        }
-        return join("\n",$output);
     }
 }

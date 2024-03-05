@@ -44,16 +44,6 @@ class CrudGeneratorServiceProvider extends ServiceProvider{
     /**
      * Register the command.
      */
-    protected function registerSwaggerMakeCommand()
-    {
-        $this->app->singleton('command.swagger.make', function ($app) {
-            return new Console\SwaggerMakeCommand();
-        });
-    }
-
-    /**
-     * Register the command.
-     */
     protected function registerCrudMakeCommand()
     {
         $this->app->singleton('command.crud.make', function ($app) {
@@ -108,6 +98,11 @@ class CrudGeneratorServiceProvider extends ServiceProvider{
      */
     public function boot()
     {
+        if(!file_exists(base_path().'/database/factories/')){
+            mkdir(base_path().'/database/factories',0755,true);
+            $file = fopen(base_path().'/database/factories/.gitkeep','w');
+            fclose($file);
+        }
         if(!file_exists(base_path().'/routes/crud/routes.php')){
             mkdir(base_path().'/routes/crud',0755,true);
             $file = fopen(base_path().'/routes/crud/routes.php','w');
@@ -117,20 +112,6 @@ class CrudGeneratorServiceProvider extends ServiceProvider{
         if(!empty(env('JWT_SECRET'))) $groupOptions['middleware'] = ['auth:api','throttle:global'];
         Route::group($groupOptions, function($router){
             require base_path().'/routes/crud/routes.php';
-        });
-        if(!file_exists(base_path().'/routes/services/routes.php')){
-            mkdir(base_path().'/routes/services',0755,true);
-            $file = fopen(base_path().'/routes/services/routes.php','w');
-            fwrite($file,'<?php'."\n");
-            fclose($file);
-        }
-        $groupOptions = [
-            'namespace' => 'App\Http\Controllers\Services',
-            'prefix' => '/api/services/'
-        ];
-        if(!empty(env('JWT_SECRET'))) $groupOptions['middleware'] = ['auth:api','throttle:global'];
-        Route::group($groupOptions, function($router){
-            require base_path().'/routes/services/routes.php';
         });
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
     }

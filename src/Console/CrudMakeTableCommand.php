@@ -20,14 +20,14 @@ class CrudMakeTableCommand extends Command{
      *
      * @var string
      */
-    protected $signature = 'make:crud:table {--s} {--openapi}';
+    protected $signature = 'make:crud:table {--s}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create CRUD controller,model and routes for all tables and generate open api annotations';
+    protected $description = 'Create CRUD controller,model and routes for all tables';
 
     /**
      * Create a new command instance.
@@ -69,10 +69,6 @@ class CrudMakeTableCommand extends Command{
             (new Model($params))->build();
             (new ModelFactory($params))->build();
             (new UnitTest($params))->build();
-        }
-        if($this->option('openapi')){
-            $this->call('make:swagger');
-            $this->info('OpenApi annotations created successfully');
         }
         $this->newLine();
     }

@@ -120,15 +120,6 @@ You can check new routes with command
 php artisan route:list
 ```
 
-This command also calls
-```bash
-php artisan make:swagger
-```
-command, that generate json file with open api annotations. File location:
-```bash
-./public/swagger.json
-```
-
 ## Additional commands:
 ```bash
 php artisan crud:route
