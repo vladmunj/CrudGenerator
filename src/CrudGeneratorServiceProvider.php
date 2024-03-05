@@ -98,7 +98,7 @@ class CrudGeneratorServiceProvider extends ServiceProvider{
      */
     public function boot()
     {
-        if(!file_exists(base_path().'/database/factories/')){
+        if(!file_exists(base_path().'/database/factories/.gitkeep')){
             mkdir(base_path().'/database/factories',0755,true);
             $file = fopen(base_path().'/database/factories/.gitkeep','w');
             fclose($file);
