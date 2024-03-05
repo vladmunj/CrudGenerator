@@ -21,7 +21,7 @@
         }
     ],
     "require": {
-        "doctrine/dbal": "^3.6",
+        "doctrine/dbal": "^4.0",
         "flipbox/lumen-generator": "^9.2.0",
         "awobaz/compoships": "^2.2.3"
     }
