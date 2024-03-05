@@ -10,7 +10,6 @@ class CrudGeneratorServiceProvider extends ServiceProvider{
      * @var array
      */
     protected $commands = [
-        'SwaggerMake' => 'command.swagger.make',
         'CrudMake' => 'command.crud.make',
         'CrudRoute' => 'command.crud.route',
         'CrudMakeTable' => 'command.crud.make.table',
