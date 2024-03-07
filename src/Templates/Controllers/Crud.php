@@ -7,5 +7,11 @@ use App\Http\Controllers\Controller;
 class ParamController extends Controller{
     const MODEL = 'App\Models\Crud\ParamModel';
 
-    use RestActions;
+    use RestActions{
+        all as protected all;
+        get as protected get;
+        create as protected create;
+        update as protected update;
+        delete as protected delete;
+    }
 }
