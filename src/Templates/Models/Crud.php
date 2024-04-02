@@ -28,8 +28,6 @@ class ParamModel extends Model{
 #RULES
     ];
 
-#PROPERTIES
-
 #MUTATORS
 
     /**
