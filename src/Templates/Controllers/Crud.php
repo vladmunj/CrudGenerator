@@ -5,7 +5,7 @@ use Vladmunj\CrudGenerator\Traits\RestActions;
 use App\Http\Controllers\Controller;
 
 class ParamController extends Controller{
-    const MODEL = 'App\Models\ParamModel';
+    public static $MODEL = 'App\Models\ParamModel';
 
     use RestActions;
 }
