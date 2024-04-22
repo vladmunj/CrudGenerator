@@ -42,7 +42,7 @@ trait RestActions{
         $this->validate($request,[
             'id'    =>  'required|numeric|exists:'.self::$MODEL::$tableStatic.',id'
         ]);
-        self::$MODEL::destroy($id);
-        return response()->json(self::$MODEL.' with id: '.$id.' removed',200);
+        self::$MODEL::destroy($request->id);
+        return response()->json(self::$MODEL.' with id: '.$request->id.' removed',200);
     }
 }
