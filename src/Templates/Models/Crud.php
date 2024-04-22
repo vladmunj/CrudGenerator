@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ParamModel extends Model{
     use Compoships, HasFactory;
 
-    protected $table = "ParamTable";
+    public $table = "ParamTable";
 
     /**
     * Validation rules

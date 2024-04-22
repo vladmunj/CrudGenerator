@@ -29,14 +29,19 @@ trait RestActions{
         return response()->json(self::MODEL::create($fields),201);
     }
 
-    public function update(Request $request, int $id): mixed{
-        $this->validate($request,self::MODEL::$rules);
-        $model = self::MODEL::find($id);
+    public function update(Request $request): mixed{
+        $this->validate($request,array_merge(self::MODEL::$rules,[
+            'id'    =>  'required|numeric|exists:'.self::MODEL::$table.',id'
+        ]));
+        $model = self::MODEL::find($request->id);
         $model->update($request->all());
         return response()->json($model,200);
     }
 
-    public function delete(int $id): mixed{
+    public function delete(Request $request): mixed{
+        $this->validate($request,[
+            'id'    =>  'required|numeric|exists:'.self::MODEL::$table.',id'
+        ]);
         self::MODEL::destroy($id);
         return response()->json(self::MODEL.' with id: '.$id.' removed',200);
     }
