@@ -31,7 +31,7 @@ trait RestActions{
 
     public function update(Request $request): mixed{
         $this->validate($request,array_merge(self::$MODEL::$rules,[
-            'id'    =>  'required|numeric|exists:'.(new self::$MODEL)->$table.',id'
+            'id'    =>  'required|numeric|exists:'.self::$MODEL::$tableStatic.',id'
         ]));
         $model = self::$MODEL::find($request->id);
         $model->update($request->all());
@@ -40,7 +40,7 @@ trait RestActions{
 
     public function delete(Request $request): mixed{
         $this->validate($request,[
-            'id'    =>  'required|numeric|exists:'.self::$MODEL::$table.',id'
+            'id'    =>  'required|numeric|exists:'.self::$MODEL::$tableStatic.',id'
         ]);
         self::$MODEL::destroy($id);
         return response()->json(self::$MODEL.' with id: '.$id.' removed',200);
