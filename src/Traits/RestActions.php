@@ -40,6 +40,6 @@ trait RestActions{
             'id'    =>  'required|numeric|exists:'.self::$MODEL::$tableStatic.',id'
         ]);
         self::$MODEL::destroy($request->id);
-        return response()->json(self::$MODEL.' with id: '.$request->id.' removed',200);
+        return response()->json(self::$MODEL.' with id: '.$request->id.' removed',204);
     }
 }
