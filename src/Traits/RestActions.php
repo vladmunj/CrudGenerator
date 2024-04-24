@@ -22,10 +22,7 @@ trait RestActions{
         $this->validate($request,self::$MODEL::$rules);
         $fields = Arr::only($request->all(),array_keys(self::$MODEL::$rules));
         if($request->filled('id')) $fields['id'] = $request->id;
-        if($model = self::$MODEL::where($fields)->first()){
-            $model->update($fields);
-            return response()->json($model,201);
-        }
+        if($model = self::$MODEL::where($fields)->first()) return response()->json('Found',302);
         return response()->json(self::$MODEL::create($fields),201);
     }
 
