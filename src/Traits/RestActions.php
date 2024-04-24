@@ -8,14 +8,14 @@ use Illuminate\Support\Arr;
  * controller must have constant with model's name
  * model must have public static $rules array to validate input data
  */
-trait RestActions{    
-    public function all(Request $request): mixed{
+trait RestActions{
+    public function get(Request $request): mixed{
+        if($request->filled('id')){
+            if(!is_numeric($request->id)) return response()->json('Not found',404);
+            return response()->json(self::$MODEL::find($request->id),200);
+        }
         if($request->filled('limit')) return response()->json(self::$MODEL::limit($request->limit)->get(),200);
         return response()->json(self::$MODEL::all(),200);
-    }
-
-    public function get(int $id): mixed{
-        return response()->json(self::$MODEL::find($id),200);
     }
 
     public function create(Request $request): mixed{
