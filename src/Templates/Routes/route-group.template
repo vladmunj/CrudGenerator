@@ -4,4 +4,5 @@ $this->app->router->group(['prefix' => 'ParamUrl'], function(){
     $this->app->router->get('/','ParamController@get');
     $this->app->router->put('/','ParamController@update');
     $this->app->router->delete('/','ParamController@delete');
+    $this->app->router->get('/find','ParamController@find');
 });

@@ -27,9 +27,13 @@ trait RestActions{
     }
 
     public function update(Request $request): mixed{
-        $this->validate($request,array_merge(self::$MODEL::$rules,[
+        $this->validate($request,[
             'id'    =>  'required|numeric|exists:'.self::$MODEL::$tableStatic.',id'
-        ]));
+        ]);
+        foreach($request->all() as $key=>$value){
+            if($key == 'id') continue;
+            if(array_key_exists($key,self::$MODEL::$rules)) $this->validate($request,[$key=>self::$MODEL::$rules[$key]]);
+        }
         $model = self::$MODEL::find($request->id);
         $model->update($request->all());
         return response()->json($model->refresh(),200);
