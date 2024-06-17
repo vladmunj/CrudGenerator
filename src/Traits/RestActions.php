@@ -32,7 +32,7 @@ trait RestActions{
         ]));
         $model = self::$MODEL::find($request->id);
         $model->update($request->all());
-        return response()->json($model,200);
+        return response()->json($model->refresh(),200);
     }
 
     public function delete(Request $request): mixed{
@@ -41,5 +41,9 @@ trait RestActions{
         ]);
         self::$MODEL::destroy($request->id);
         return response()->json(self::$MODEL.' with id: '.$request->id.' removed',204);
+    }
+
+    public function find(Request $request): mixed{
+        return response()->json(self::$MODEL::where($request->all())->get(),200);
     }
 }
