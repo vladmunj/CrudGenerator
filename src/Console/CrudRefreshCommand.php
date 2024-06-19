@@ -127,7 +127,7 @@ class CrudRefreshCommand extends Command{
                 DB::statement('ALTER TABLE '.$foreignKey->table_name.' ADD CONSTRAINT '.$foreignKey->table_name.'_'.$foreignKey->column_name.'_foreign FOREIGN KEY ('.$foreignKey->column_name.') REFERENCES '.$foreignKey->table_name.'(id);');
                 $this->info($foreignKey->table_name.'.'.$foreignKey->column_name.' restored');
             }catch(\Exception $e){
-                $this->error($foreignKey->table_name.'.'.$foreignKey->column_name.' not restored');
+                $this->error($foreignKey->table_name.'.'.$foreignKey->column_name.' not restored. Details: '.$e->getMessage());
             }
         }
     }
