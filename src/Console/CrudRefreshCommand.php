@@ -14,7 +14,7 @@ class CrudRefreshCommand extends Command{
      *
      * @var string
      */
-    protected $signature = 'crud:refresh';
+    protected $signature = 'crud:refresh {--nocrud}';
 
     /**
      * The console command description.
@@ -51,7 +51,7 @@ class CrudRefreshCommand extends Command{
         $this->migrate();
         $this->seed($tablesData);
         $this->restoreForeignKeys($foreignKeysInfo);
-        $this->crud();
+        if($this->options('nocrud') == false) $this->crud();
     }
 
     /**
@@ -67,7 +67,8 @@ class CrudRefreshCommand extends Command{
             try{
                 $model::factory()->create();
             }catch(\Exception $e){
-                dump('Factory for '.$model.' not found');
+                dump($e->getMessage());
+                $this->error('Factory for '.$model.' not found');
             }
         }
     }
