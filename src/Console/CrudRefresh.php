@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Str;
 
-class CrudRefresh extends Command{
+class CrudRefreshCommand extends Command{
     const EXCLUDED_TABLES = ['migrations', 'password_resets', 'failed_jobs', 'error_logs'];
 
     /**
