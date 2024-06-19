@@ -67,8 +67,7 @@ class CrudRefreshCommand extends Command{
             try{
                 $model::factory()->create();
             }catch(\Exception $e){
-                dump($e->getMessage());
-                $this->error('Factory for '.$model.' not found');
+                $this->error($e->getMessage());
             }
         }
     }
@@ -139,7 +138,7 @@ class CrudRefreshCommand extends Command{
      * @return void
      */
     private function dropMigrationsHistory($table) : void{
-        DB::table('migrations')->where('migration', 'like', '%'.$table['filename'].'%')->delete();
+        DB::table('migrations')->where('migration', str_replace('.php','',$table['filename']))->delete();
     }
 
     /**
