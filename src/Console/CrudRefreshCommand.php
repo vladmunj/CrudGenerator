@@ -97,22 +97,11 @@ class CrudRefreshCommand extends Command{
      * @return array
      */
     private function getForeignKeysInfo($tableName){
-        return DB::table('information_schema.constraint_column_usage')
-            ->select('r.table_name','r.column_name')
-            ->join('information_schema.referential_constraints as fk', function($join){
-                $join->on('fk.unique_constraint_catalog', '=', 'constraint_column_usage.constraint_catalog')
-                    ->on('fk.unique_constraint_schema', '=', 'constraint_column_usage.constraint_schema')
-                    ->on('fk.unique_constraint_name', '=', 'constraint_column_usage.constraint_name');
-            })
-            ->join('information_schema.key_column_usage as r', function($join){
-                $join->on('r.constraint_catalog', '=', 'fk.constraint_catalog')
-                    ->on('r.constraint_schema', '=', 'fk.constraint_schema')
-                    ->on('r.constraint_name', '=', 'fk.constraint_name');
-            })
-            ->where('constraint_column_usage.column_name', 'id')
-            ->where('constraint_column_usage.table_catalog', env('DB_DATABASE'))
-            ->where('constraint_column_usage.table_schema', 'public')
-            ->where('constraint_column_usage.table_name', $tableName)
+        return DB::table('information_schema.constraint_column_usage as ccu')
+            ->select('ccu.table_name','ccu.column_name','ccu.constraint_name')
+            ->where('ccu.table_catalog', env('DB_DATABASE'))
+            ->where('ccu.table_schema', 'public')
+            ->where('ccu.table_name', $tableName)
             ->get()->toArray();
     }
 
@@ -124,7 +113,7 @@ class CrudRefreshCommand extends Command{
     private function restoreForeignKeys($foreignKeysInfo){
         foreach($foreignKeysInfo as $foreignKey){
             try{
-                DB::statement('ALTER TABLE '.$foreignKey->table_name.' ADD CONSTRAINT '.$foreignKey->table_name.'_'.$foreignKey->column_name.'_foreign FOREIGN KEY ('.$foreignKey->column_name.') REFERENCES '.$foreignKey->table_name.'(id);');
+                DB::statement('ALTER TABLE '.$foreignKey->table_name.' ADD CONSTRAINT '.$foreignKey->constraint_name.' FOREIGN KEY ('.$foreignKey->column_name.') REFERENCES '.$foreignKey->table_name.'(id);');
                 $this->info($foreignKey->table_name.'.'.$foreignKey->column_name.' restored');
             }catch(\Exception $e){
                 $this->error($foreignKey->table_name.'.'.$foreignKey->column_name.' not restored. Details: '.$e->getMessage());
