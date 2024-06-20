@@ -49,7 +49,7 @@ class CrudRefreshCommand extends Command{
             $this->dropTable($table);
         }
         $this->migrate();
-        if($this->options('nocrud') == false) $this->crud();
+        if($this->option('nocrud') == false) $this->crud();
         $this->seed($tablesData);
         foreach($tablesData as $table){
             $this->restoreForeignKeys($foreignKeysInfo,$table);
@@ -135,7 +135,8 @@ class CrudRefreshCommand extends Command{
                     DB::statement('ALTER TABLE '.$foreignKey->table_name.' ADD CONSTRAINT '.$foreignKey->constraint_name.' FOREIGN KEY ('.$foreignKey->column_name.') REFERENCES '.$tableName.'(id);');
                     $this->info($foreignKey->constraint_name.' restored');
                 }catch(\Exception $e){
-                    $this->error($foreignKey->constraint_name.' not restored. Details: '.$e->getMessage());
+                    if(strpos($e->getMessage(),'already exists')) $this->warn($foreignKey->constraint_name.' not restored. Details: '.$e->getMessage());
+                    else $this->error($foreignKey->constraint_name.' not restored. Details: '.$e->getMessage());
                 }
             }
         }
