@@ -40,7 +40,6 @@ class CrudRefreshCommand extends Command{
      */
     public function handle()
     {
-        $this->migrate(); // validate migrations is correct before drop tables and data
         $tablesData = $this->loadTablesData();
         $foreignKeysInfo = [];
         foreach($tablesData as $table){
