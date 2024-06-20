@@ -107,7 +107,7 @@ class Model{
     private function foreign(){
         foreach($this->foreignKeys as $foreign){
             $this->fields[$foreign->column_name]['rules']['required'] = 'required';
-            $this->fields[$foreign->column_name]['rules']['exists'] = 'exists:'.$foreign->foreign_table_name.','.$foreign->foreign_column_name;
+            // $this->fields[$foreign->column_name]['rules']['exists'] = 'exists:'.$foreign->foreign_table_name.','.$foreign->foreign_column_name;
             $this->fields[$foreign->column_name]['foreign'] = true;
             $this->fields[$foreign->column_name]['foreign_table'] = $foreign->foreign_table_name;
             $this->fields[$foreign->column_name]['foreign_table_column'] = $foreign->foreign_column_name;
