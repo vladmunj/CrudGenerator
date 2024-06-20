@@ -31,7 +31,6 @@ class CrudRefreshCommand extends Command{
     public function __construct()
     {
         parent::__construct();
-        $this->params = [];
     }
 
     /**
@@ -54,6 +53,7 @@ class CrudRefreshCommand extends Command{
         foreach($tablesData as $table){
             $this->restoreForeignKeys($foreignKeysInfo,$table);
         }
+        $this->seed();
     }
 
     /**
@@ -61,17 +61,8 @@ class CrudRefreshCommand extends Command{
      * @param array $tablesData
      * @return void
      */
-    private function seed($tablesData){
-        foreach($tablesData as $table){
-            $model = '\\App\\Models\\'.implode('',array_map(function($part){
-                return Str::ucfirst(Str::singular($part));
-            },explode("_",$table['name'])));
-            try{
-                $model::factory()->create();
-            }catch(\Exception $e){
-                $this->error($e->getMessage());
-            }
-        }
+    private function seed(){
+        $this->call('db:seed');
     }
 
     /**
