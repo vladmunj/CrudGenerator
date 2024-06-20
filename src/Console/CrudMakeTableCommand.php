@@ -11,9 +11,7 @@ use Vladmunj\CrudGenerator\Builders\UnitTest;
 use Symfony\Component\Process\Process;
 
 class CrudMakeTableCommand extends Command{
-    const EXCEPTION_TABLES = [
-        'crud_route_groups','migrations'
-    ];
+    const EXCLUDED_TABLES = ['migrations', 'password_resets', 'failed_jobs', 'crud_route_groups'];
 
     /**
      * The name and signature of the console command.
@@ -47,11 +45,11 @@ class CrudMakeTableCommand extends Command{
     private function prepareParams($table){
         $controllerName = implode('',array_map(function($part){
             return Str::ucfirst(Str::singular($part));
-        },explode("_",$table->table_name)));
+        },explode("_",$table['name'])));
         $params['controller_name'] = $controllerName.'Controller';
         $params['model_name'] = $controllerName;
-        $params['crud_url'] = '/api/'.str_replace('_','/',Str::singular($table->table_name));
-        $params['table_name'] = $table->table_name;
+        $params['crud_url'] = '/api/'.str_replace('_','/',Str::singular($table['name']));
+        $params['table_name'] = $table['name'];
         $params['author'] = env('PACKAGE_AUTHOR');
         return $params;
     }
@@ -63,7 +61,7 @@ class CrudMakeTableCommand extends Command{
         DB::table('crud_route_groups')->truncate();
         foreach($this->tables as $table){
             $params = $this->prepareParams($table);
-            $this->line('CRUD for '.$table->table_name);
+            $this->line('CRUD for '.$table['name']);
             (new Controller($params))->build();
             (new Router($params))->build();
             (new Model($params))->build();
@@ -78,13 +76,21 @@ class CrudMakeTableCommand extends Command{
      */
     private function getTableNames(){
         $exceptions = array_merge(
-            self::EXCEPTION_TABLES,
+            self::EXCLUDED_TABLES,
             explode(",",str_replace(' ','',$this->params['exceptions']))
         );
         $exceptions = array_filter($exceptions);
-        $this->tables = DB::table('information_schema.tables')->select([
-            'table_name'
-        ])->where('table_schema','public')->whereNotIn('table_name',$exceptions)->get();
+
+        $migrations = preg_grep('/^([^.])/', scandir(database_path('migrations')));
+        foreach($migrations as $migration){
+            preg_match('/Schema::create\(\'(.*)\', function/', file_get_contents(database_path('migrations/'.$migration)), $matches);
+            if(count($matches) <= 1) continue;
+            if(in_array($matches[1], $exceptions)) continue;
+            $this->tables[] = [
+                'name' => $matches[1],
+                'filename' => $migration
+            ];
+        }
     }
 
     /**
