@@ -83,13 +83,15 @@ class CrudMakeTableCommand extends Command{
 
         $migrations = preg_grep('/^([^.])/', scandir(database_path('migrations')));
         foreach($migrations as $migration){
-            preg_match('/Schema::create\(\'(.*)\', function/', file_get_contents(database_path('migrations/'.$migration)), $matches);
+            preg_match_all('/Schema::create\(\'(.*)\', function/', file_get_contents(database_path('migrations/'.$migration)), $matches);
             if(count($matches) <= 1) continue;
-            if(in_array($matches[1], $exceptions)) continue;
-            $this->tables[] = [
-                'name' => $matches[1],
-                'filename' => $migration
-            ];
+            foreach($matches[1] as $tableName){
+                if(in_array($tableName, $exceptions)) continue;
+                $this->tables[] = [
+                    'name' => $tableName,
+                    'filename' => $migration
+                ];
+            }
         }
     }
 
