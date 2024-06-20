@@ -44,13 +44,15 @@ class CrudRefreshCommand extends Command{
         $tablesData = $this->loadTablesData();
         $foreignKeysInfo = [];
         foreach($tablesData as $table){
-            $foreignKeysInfo = array_merge($foreignKeysInfo, $this->getForeignKeysInfo($table['name']));
+            $foreignKeysInfo[$table['name']] = $this->getForeignKeysInfo($table['name']);
             $this->dropMigrationsHistory($table);
             $this->dropTable($table);
         }
         $this->migrate();
         $this->seed($tablesData);
-        $this->restoreForeignKeys($foreignKeysInfo);
+        foreach($tablesData as $table){
+            $this->restoreForeignKeys($foreignKeysInfo,$table);
+        }
         if($this->options('nocrud') == false) $this->crud();
     }
 
@@ -112,7 +114,7 @@ class CrudRefreshCommand extends Command{
         ->where('ccu.column_name', 'id')
         ->where('ccu.table_catalog', env('DB_DATABASE'))
         ->where('ccu.table_schema', 'public')
-        ->where('ccu.table_name', 'users')
+        ->where('ccu.table_name', $tableName)
         ->get()->toArray();
     }
 
@@ -122,12 +124,14 @@ class CrudRefreshCommand extends Command{
      * @return void
      */
     private function restoreForeignKeys($foreignKeysInfo){
-        foreach($foreignKeysInfo as $foreignKey){
-            try{
-                DB::statement('ALTER TABLE '.$foreignKey->table_name.' ADD CONSTRAINT '.$foreignKey->constraint_name.' FOREIGN KEY ('.$foreignKey->column_name.') REFERENCES '.$foreignKey->table_name.'(id);');
-                $this->info($foreignKey->constraint_name.' restored');
-            }catch(\Exception $e){
-                $this->error($foreignKey->constraint_name.' not restored. Details: '.$e->getMessage());
+        foreach($foreignKeysInfo as $tableName => $foreignKeys){
+            foreach($foreignKeys as $foreignKey){
+                try{
+                    DB::statement('ALTER TABLE '.$foreignKey->table_name.' ADD CONSTRAINT '.$foreignKey->constraint_name.' FOREIGN KEY ('.$foreignKey->column_name.') REFERENCES '.$tableName.'(id);');
+                    $this->info($foreignKey->constraint_name.' restored');
+                }catch(\Exception $e){
+                    $this->error($foreignKey->constraint_name.' not restored. Details: '.$e->getMessage());
+                }
             }
         }
     }
