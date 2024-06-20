@@ -46,8 +46,8 @@ class CrudRefreshCommand extends Command{
         foreach($tablesData as $table){
             $foreignKeysInfo[$table['name']] = $this->getForeignKeysInfo($table['name']);
             $this->dropMigrationsHistory($table);
-            $this->dropTable($table);
             $this->truncateForeignTables($table);
+            $this->dropTable($table);
         }
         $this->migrate();
         if($this->option('nocrud') == false) $this->crud();
@@ -169,6 +169,7 @@ class CrudRefreshCommand extends Command{
         $foreignKeys = $this->getForeignKeysInfo($table['name']);
         foreach($foreignKeys as $foreignKey){
             DB::table($foreignKey->table_name)->truncate();
+            $this->info($foreignKey->table_name.' truncated');
         }
     }
 
