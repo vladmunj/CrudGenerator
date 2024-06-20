@@ -47,10 +47,10 @@ class CrudRefreshCommand extends Command{
             $foreignKeysInfo[$table['name']] = $this->getForeignKeysInfo($table['name']);
             $this->dropMigrationsHistory($table);
             $this->dropTable($table);
+            $this->truncateForeignTables($table);
         }
         $this->migrate();
         if($this->option('nocrud') == false) $this->crud();
-        $this->seed($tablesData);
         foreach($tablesData as $table){
             $this->restoreForeignKeys($foreignKeysInfo,$table);
         }
@@ -158,6 +158,18 @@ class CrudRefreshCommand extends Command{
      */
     private function dropTable($table) : void{
         DB::statement('DROP TABLE IF EXISTS '.$table['name'].' CASCADE;');
+    }
+
+    /**
+     * Truncate foreign tables
+     * @param array $table
+     * @return void
+     */
+    private function truncateForeignTables($table) : void{
+        $foreignKeys = $this->getForeignKeysInfo($table['name']);
+        foreach($foreignKeys as $foreignKey){
+            DB::table($foreignKey->table_name)->truncate();
+        }
     }
 
     /**
