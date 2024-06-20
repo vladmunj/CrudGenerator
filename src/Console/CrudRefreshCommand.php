@@ -82,14 +82,19 @@ class CrudRefreshCommand extends Command{
         $migrations = preg_grep('/^([^.])/', scandir(database_path('migrations')));
         $tableNames = [];
         foreach($migrations as $migration){
-            preg_match('/Schema::create\(\'(.*)\', function/', file_get_contents(database_path('migrations/'.$migration)), $matches);
+            preg_match_all('/Schema::create\(\'(.*)\', function/', file_get_contents(database_path('migrations/'.$migration)), $matches);
             if(count($matches) <= 1) continue;
-            if(in_array($matches[1], self::EXCLUDED_TABLES)) continue;
-            $tableNames[] = [
-                'name' => $matches[1],
-                'filename' => $migration
-            ];
+            foreach($matches[1] as $tableName){
+                if(in_array($tableName, self::EXCLUDED_TABLES)) continue;
+                $tableNames[] = [
+                    'name' => $tableName,
+                    'filename' => $migration
+                ];
+            }
         }
+        $this->info(join(",",array_map(function($table){
+            return $table['name'];
+        },$tableNames)).' tables loaded');
         return $tableNames;
     }
 
