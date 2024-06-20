@@ -49,11 +49,11 @@ class CrudRefreshCommand extends Command{
             $this->dropTable($table);
         }
         $this->migrate();
+        if($this->options('nocrud') == false) $this->crud();
         $this->seed($tablesData);
         foreach($tablesData as $table){
             $this->restoreForeignKeys($foreignKeysInfo,$table);
         }
-        if($this->options('nocrud') == false) $this->crud();
     }
 
     /**
