@@ -93,6 +93,11 @@ class CrudMakeTableCommand extends Command{
                 ];
             }
         }
+        // TODO: add this data if --err argument is passed
+        $this->tables[] = [
+            'name' => 'error_logs',
+            'filename' => 'error_logs'
+        ];
     }
 
     /**
