@@ -15,6 +15,7 @@ class CrudGeneratorServiceProvider extends ServiceProvider{
         'CrudMakeTable' => 'command.crud.make.table',
         'ApiServiceMake' => 'command.api.service.make',
         'CrudRefresh' => 'command.crud.refresh',
+        'GenerateTests' => 'command.tests.gen'
     ];
 
     /**
@@ -88,6 +89,12 @@ class CrudGeneratorServiceProvider extends ServiceProvider{
     {
         $this->app->singleton('command.crud.refresh', function ($app) {
             return new Console\CrudRefreshCommand();
+        });
+    }
+
+    protected function registerGenerateTestsCommand(){
+        $this->app->singleton('command.tests.gen', function ($app) {
+            return new Console\TestsGenCommand();
         });
     }
 
